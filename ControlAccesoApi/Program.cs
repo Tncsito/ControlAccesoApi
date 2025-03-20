@@ -10,6 +10,7 @@ namespace ControlAccesoApi
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -17,8 +18,15 @@ namespace ControlAccesoApi
             builder.Services.AddSwaggerGen();
 
             // Register services as singletons
-            builder.Services.AddSingleton<MongoDBService>();
+            builder.Services.AddSingleton<MongoDBService>(sp =>
+            {
+                var configuration = sp.GetRequiredService<IConfiguration>();
+                return new MongoDBService(configuration);
+            });
             builder.Services.AddSingleton<UsuarioRepositorio>();
+            builder.Services.AddSingleton<AccesoRepositorio>();
+            builder.Services.AddSingleton<RegistroRepositorio>();
+            builder.Services.AddSingleton<PuertaRepositorio>();
 
             var app = builder.Build();
 

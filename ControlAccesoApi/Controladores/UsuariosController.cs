@@ -17,24 +17,24 @@ namespace ControlAccesoApi.Controladores
         [HttpGet]
         public async Task<IActionResult> ObtenerUsuarios()
         {
-            var usuarios = await _usuarioRepositorio.ObtenerTodosAsync();
-            return Ok(usuarios);
+            var Usuarios = await _usuarioRepositorio.ObtenerTodosAsync();
+            return Ok(Usuarios);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerUsuarioPorId(string id)
         {
-            var usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
-            if (usuario == null) return NotFound();
-            return Ok(usuario);
+            var Usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
+            if (Usuario == null) return NotFound();
+            return Ok(Usuario);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearUsuario([FromBody] Usuario usuario)
+        public async Task<IActionResult> CrearUsuario([FromBody] Usuario Usuario)
         {
-            if (usuario == null) return BadRequest();
-            await _usuarioRepositorio.CrearAsync(usuario);
-            return CreatedAtAction(nameof(ObtenerUsuarioPorId), new { id = usuario.Id }, usuario);
+            if (Usuario == null) return BadRequest();
+            await _usuarioRepositorio.CrearAsync(Usuario);
+            return CreatedAtAction(nameof(ObtenerUsuarioPorId), new { id = Usuario.Id }, Usuario);
         }
 
         [HttpPut("{id}")]
