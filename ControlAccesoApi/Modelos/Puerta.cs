@@ -16,4 +16,9 @@ namespace ControlAccesoApi.Modelos
         [BsonElement("Ubicacion")]
         public string? Ubicacion { get; set; }
     }
+    public class PuertaDto
+    {
+        public string? Nombre { get; set; }
+        public string? Ubicacion { get; set; }
+    }
 }

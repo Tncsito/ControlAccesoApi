@@ -30,21 +30,32 @@ namespace ControlAccesoApi.Controladores
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Puerta puerta)
+        public async Task<IActionResult> Post([FromBody] PuertaDto puertaDto)
         {
+            var puerta = new Puerta
+            {
+                Nombre = puertaDto.Nombre,
+                Ubicacion = puertaDto.Ubicacion,
+            };
+
             await _puertaRepositorio.InsertarAsync(puerta);
             return CreatedAtAction(nameof(Get), new { id = puerta.Id }, puerta);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] Puerta puerta)
+        public async Task<IActionResult> Put(string id, [FromBody] PuertaDto puertaDto)
         {
             var existente = await _puertaRepositorio.ObtenerPorIdAsync(id);
             if (existente == null)
                 return NotFound();
 
-            puerta.Id = id;
-            await _puertaRepositorio.ActualizarAsync(id, puerta);
+            // Actualizar solo los campos proporcionados en el DTO
+            if (puertaDto.Nombre != null)
+                existente.Nombre = puertaDto.Nombre;
+            if (puertaDto.Ubicacion != null)
+                existente.Ubicacion = puertaDto.Ubicacion;
+
+            await _puertaRepositorio.ActualizarAsync(id, existente);
             return NoContent();
         }
 

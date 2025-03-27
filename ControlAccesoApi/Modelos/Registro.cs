@@ -19,4 +19,10 @@ namespace ControlAccesoApi.Modelos
         [BsonElement("Metodo")]
         public string? Metodo { get; set; }
     }
+    public class RegistroDto
+    {
+        public string? UsuarioId { get; set; }
+        public DateTime Fecha { get; set; }
+        public string? Metodo { get; set; }
+    }
 }

@@ -21,5 +21,20 @@ namespace ControlAccesoApi.Modelos
 
         [BsonElement("Estado")]
         public bool Estado { get; set; }
+        public Accesos()
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                Id = ObjectId.GenerateNewId().ToString();
+            }
+        }
     }
+    public class AccesosDto
+    {
+        public string? UsuarioId { get; set; }
+        public DateTime Fecha { get; set; }
+        public string? Metodo { get; set; }
+        public bool Estado { get; set; }
+    }
+
 }

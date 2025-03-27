@@ -19,3 +19,10 @@ public class Usuario
     [BsonElement("UltimoAcceso")]
     public DateTime UltimoAcceso { get; set; }
 }
+public class UsuarioDto
+{
+    public string? Nombre { get; set; }
+    public int? Pin { get; set; }
+    public string? Rol { get; set; }
+    public DateTime? UltimoAcceso { get; set; }
+}

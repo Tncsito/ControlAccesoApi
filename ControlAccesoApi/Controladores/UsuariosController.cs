@@ -1,58 +1,75 @@
-﻿using ControlAccesoApi.Repositorios;
+﻿using ControlAccesoApi.Modelos;
+using ControlAccesoApi.Repositorios;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ControlAccesoApi.Controladores
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsuariosController : ControllerBase
+    public class UsuarioController : ControllerBase
     {
         private readonly UsuarioRepositorio _usuarioRepositorio;
 
-        public UsuariosController(UsuarioRepositorio usuarioRepositorio)
+        public UsuarioController(UsuarioRepositorio usuarioRepositorio)
         {
             _usuarioRepositorio = usuarioRepositorio;
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerUsuarios()
-        {
-            var Usuarios = await _usuarioRepositorio.ObtenerTodosAsync();
-            return Ok(Usuarios);
-        }
+        public async Task<IEnumerable<Usuario>> Get() => await _usuarioRepositorio.ObtenerTodosAsync();
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> ObtenerUsuarioPorId(string id)
+        public async Task<ActionResult<Usuario>> Get(string id)
         {
-            var Usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
-            if (Usuario == null) return NotFound();
-            return Ok(Usuario);
+            var usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
+            if (usuario == null)
+                return NotFound();
+            return usuario;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearUsuario([FromBody] Usuario Usuario)
+        public async Task<IActionResult> Post([FromBody] UsuarioDto usuarioDto)
         {
-            if (Usuario == null) return BadRequest();
-            await _usuarioRepositorio.CrearAsync(Usuario);
-            return CreatedAtAction(nameof(ObtenerUsuarioPorId), new { id = Usuario.Id }, Usuario);
+            var usuario = new Usuario
+            {
+                Nombre = usuarioDto.Nombre,
+                Pin = Convert.ToInt32(usuarioDto.Pin),
+                Rol = usuarioDto.Rol
+            };
+
+            await _usuarioRepositorio.CrearAsync(usuario);
+            return CreatedAtAction(nameof(Get), new { id = usuario.Id }, usuario);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarUsuario(string id, [FromBody] Usuario usuarioActualizado)
+        public async Task<IActionResult> Put(string id, [FromBody] UsuarioDto usuarioDto)
         {
-            var usuarioExistente = await _usuarioRepositorio.ObtenerPorIdAsync(id);
-            if (usuarioExistente == null) return NotFound();
+            var existente = await _usuarioRepositorio.ObtenerPorIdAsync(id);
+            if (existente == null)
+                return NotFound();
 
-            usuarioActualizado.Id = id;
-            await _usuarioRepositorio.ActualizarAsync(id, usuarioActualizado);
+            // Actualizar solo los campos proporcionados en el DTO
+            if (usuarioDto.Nombre != null)
+                existente.Nombre = usuarioDto.Nombre;
+            if (usuarioDto.Pin.HasValue)
+                existente.Pin = usuarioDto.Pin.Value;
+            if (usuarioDto.Rol != null)
+                existente.Rol = usuarioDto.Rol;
+            if (usuarioDto.UltimoAcceso.HasValue)
+                existente.UltimoAcceso = usuarioDto.UltimoAcceso.Value;
+
+            await _usuarioRepositorio.ActualizarAsync(id, existente);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarUsuario(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var usuarioExistente = await _usuarioRepositorio.ObtenerPorIdAsync(id);
-            if (usuarioExistente == null) return NotFound();
+            var usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
+            if (usuario == null)
+                return NotFound();
 
             await _usuarioRepositorio.EliminarAsync(id);
             return NoContent();
