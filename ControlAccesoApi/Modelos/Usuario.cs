@@ -9,6 +9,10 @@ public class Usuario
 
     [BsonElement("Nombre")]
     public string? Nombre { get; set; }
+    [BsonElement("Correo")]
+    public string? Correo { get; set; }
+    [BsonElement("Clave")]
+    public string? Clave { get; set; }
 
     [BsonElement("Pin")]
     public int Pin { get; set; }
@@ -22,6 +26,8 @@ public class Usuario
 public class UsuarioDto
 {
     public string? Nombre { get; set; }
+    public string? Correo { get; set; }
+    public string? Clave { get; set; }
     public int? Pin { get; set; }
     public string? Rol { get; set; }
     public DateTime? UltimoAcceso { get; set; }

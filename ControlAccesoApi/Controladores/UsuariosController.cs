@@ -35,6 +35,8 @@ namespace ControlAccesoApi.Controladores
             var usuario = new Usuario
             {
                 Nombre = usuarioDto.Nombre,
+                Correo = usuarioDto.Correo,
+                Clave = usuarioDto.Clave,
                 Pin = Convert.ToInt32(usuarioDto.Pin),
                 Rol = usuarioDto.Rol
             };
@@ -53,6 +55,10 @@ namespace ControlAccesoApi.Controladores
             // Actualizar solo los campos proporcionados en el DTO
             if (usuarioDto.Nombre != null)
                 existente.Nombre = usuarioDto.Nombre;
+            if (usuarioDto.Correo != null)
+                existente.Correo = usuarioDto.Correo;
+            if (usuarioDto.Clave != null)
+                existente.Clave = usuarioDto.Clave;
             if (usuarioDto.Pin.HasValue)
                 existente.Pin = usuarioDto.Pin.Value;
             if (usuarioDto.Rol != null)

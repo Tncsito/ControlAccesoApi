@@ -21,6 +21,10 @@ namespace ControlAccesoApi.Modelos
 
         [BsonElement("Estado")]
         public bool Estado { get; set; }
+
+        [BsonElement("Puertas_id")]
+        public string? PuertasId { get; set; }
+
         public Accesos()
         {
             if (string.IsNullOrEmpty(Id))
@@ -35,6 +39,8 @@ namespace ControlAccesoApi.Modelos
         public DateTime Fecha { get; set; }
         public string? Metodo { get; set; }
         public bool Estado { get; set; }
+        public string? PuertasId { get; set; }
+
     }
 
 }

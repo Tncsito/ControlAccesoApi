@@ -10,7 +10,7 @@ namespace ControlAccesoApi.Modelos
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("UsuarioId")]
+        [BsonElement("Usuario_id")]
         public string? UsuarioId { get; set; }
 
         [BsonElement("Fecha")]

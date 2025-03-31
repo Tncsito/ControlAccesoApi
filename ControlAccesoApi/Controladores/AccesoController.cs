@@ -37,7 +37,8 @@ namespace ControlAccesoApi.Controladores
                 UsuarioId = accesoDto.UsuarioId,
                 Fecha = accesoDto.Fecha,
                 Metodo = accesoDto.Metodo,
-                Estado = accesoDto.Estado
+                Estado = accesoDto.Estado,
+                PuertasId = accesoDto.PuertasId
             };
 
             await _accesoRepositorio.InsertarAsync(acceso);
@@ -58,6 +59,8 @@ namespace ControlAccesoApi.Controladores
             if (accesoDto.Metodo != null)
                 existente.Metodo = accesoDto.Metodo;
             existente.Estado = accesoDto.Estado;
+            if (accesoDto.PuertasId != null)
+                existente.PuertasId = accesoDto.PuertasId;
 
             await _accesoRepositorio.ActualizarAsync(id, existente);
             return NoContent();
