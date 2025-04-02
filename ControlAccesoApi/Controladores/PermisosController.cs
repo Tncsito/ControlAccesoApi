@@ -17,10 +17,10 @@ namespace ControlAccesoApi.Controladores
             _permisosRepositorio = permisosRepositorio;
         }
 
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<IEnumerable<Permisos>> Get() => await _permisosRepositorio.ObtenerTodosAsync();
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<Permisos>> Get(string id)
         {
             var permiso = await _permisosRepositorio.ObtenerPorIdAsync(id);
@@ -29,7 +29,7 @@ namespace ControlAccesoApi.Controladores
             return permiso;
         }
 
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<IActionResult> Post([FromBody] PermisosDto permisosDto)
         {
             var permiso = new Permisos
@@ -45,7 +45,7 @@ namespace ControlAccesoApi.Controladores
             return CreatedAtAction(nameof(Get), new { id = permiso.Id }, permiso);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Put/{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] PermisosDto permisosDto)
         {
             var existente = await _permisosRepositorio.ObtenerPorIdAsync(id);
@@ -68,7 +68,7 @@ namespace ControlAccesoApi.Controladores
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var permiso = await _permisosRepositorio.ObtenerPorIdAsync(id);

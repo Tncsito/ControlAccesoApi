@@ -17,10 +17,10 @@ namespace ControlAccesoApi.Controladores
             _puertaRepositorio = puertaRepositorio;
         }
 
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<IEnumerable<Puerta>> Get() => await _puertaRepositorio.ObtenerTodasAsync();
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<Puerta>> Get(string id)
         {
             var puerta = await _puertaRepositorio.ObtenerPorIdAsync(id);
@@ -29,7 +29,7 @@ namespace ControlAccesoApi.Controladores
             return puerta;
         }
 
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<IActionResult> Post([FromBody] PuertaDto puertaDto)
         {
             var puerta = new Puerta
@@ -42,7 +42,7 @@ namespace ControlAccesoApi.Controladores
             return CreatedAtAction(nameof(Get), new { id = puerta.Id }, puerta);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Put/{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] PuertaDto puertaDto)
         {
             var existente = await _puertaRepositorio.ObtenerPorIdAsync(id);
@@ -59,7 +59,7 @@ namespace ControlAccesoApi.Controladores
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var puerta = await _puertaRepositorio.ObtenerPorIdAsync(id);

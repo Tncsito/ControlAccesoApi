@@ -24,6 +24,8 @@ namespace ControlAccesoApi.Modelos
 
         [BsonElement("Puertas_id")]
         public string? PuertasId { get; set; }
+        [BsonElement("Permisos_id")]
+        public string? PermisosId { get; set; }
 
         public Accesos()
         {
@@ -38,9 +40,9 @@ namespace ControlAccesoApi.Modelos
         public string? UsuarioId { get; set; }
         public DateTime Fecha { get; set; }
         public string? Metodo { get; set; }
-        public bool Estado { get; set; }
+        public bool Estado { get; set; } // Estado del acceso (true = permitido, false = denegado)
         public string? PuertasId { get; set; }
-
+        public string? PermisosId { get; set; }
     }
 
 }

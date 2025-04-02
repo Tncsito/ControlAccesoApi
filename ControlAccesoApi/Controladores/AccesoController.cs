@@ -17,10 +17,10 @@ namespace ControlAccesoApi.Controladores
             _accesoRepositorio = accesoRepositorio;
         }
 
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<IEnumerable<Accesos>> Get() => await _accesoRepositorio.ObtenerTodosAsync();
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<Accesos>> Get(string id)
         {
             var acceso = await _accesoRepositorio.ObtenerPorIdAsync(id);
@@ -29,7 +29,7 @@ namespace ControlAccesoApi.Controladores
             return acceso;
         }
 
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<IActionResult> Post([FromBody] AccesosDto accesoDto)
         {
             var acceso = new Accesos
@@ -38,14 +38,15 @@ namespace ControlAccesoApi.Controladores
                 Fecha = accesoDto.Fecha,
                 Metodo = accesoDto.Metodo,
                 Estado = accesoDto.Estado,
-                PuertasId = accesoDto.PuertasId
+                PuertasId = accesoDto.PuertasId,
+                PermisosId = accesoDto.PermisosId
             };
 
             await _accesoRepositorio.InsertarAsync(acceso);
             return CreatedAtAction(nameof(Get), new { id = acceso.Id }, acceso);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Put/{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] AccesosDto accesoDto)
         {
             var existente = await _accesoRepositorio.ObtenerPorIdAsync(id);
@@ -60,13 +61,15 @@ namespace ControlAccesoApi.Controladores
                 existente.Metodo = accesoDto.Metodo;
             existente.Estado = accesoDto.Estado;
             if (accesoDto.PuertasId != null)
-                existente.PuertasId = accesoDto.PuertasId;
+                existente.PuertasId = accesoDto.PermisosId;
+            if (accesoDto.PermisosId != null)
+                existente.PermisosId = accesoDto.PermisosId;
 
             await _accesoRepositorio.ActualizarAsync(id, existente);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var acceso = await _accesoRepositorio.ObtenerPorIdAsync(id);

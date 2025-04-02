@@ -17,10 +17,10 @@ namespace ControlAccesoApi.Controladores
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        [HttpGet]
+        [HttpGet("Get")]
         public async Task<IEnumerable<Usuario>> Get() => await _usuarioRepositorio.ObtenerTodosAsync();
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<ActionResult<Usuario>> Get(string id)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
@@ -29,7 +29,7 @@ namespace ControlAccesoApi.Controladores
             return usuario;
         }
 
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<IActionResult> Post([FromBody] UsuarioDto usuarioDto)
         {
             var usuario = new Usuario
@@ -45,7 +45,7 @@ namespace ControlAccesoApi.Controladores
             return CreatedAtAction(nameof(Get), new { id = usuario.Id }, usuario);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Put/{id}")]
         public async Task<IActionResult> Put(string id, [FromBody] UsuarioDto usuarioDto)
         {
             var existente = await _usuarioRepositorio.ObtenerPorIdAsync(id);
@@ -70,7 +70,7 @@ namespace ControlAccesoApi.Controladores
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var usuario = await _usuarioRepositorio.ObtenerPorIdAsync(id);
