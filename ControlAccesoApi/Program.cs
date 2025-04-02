@@ -28,6 +28,7 @@ namespace ControlAccesoApi
             builder.Services.AddSingleton<RegistroRepositorio>();
             builder.Services.AddSingleton<PuertaRepositorio>();
             builder.Services.AddSingleton<PermisosRepositorio>();
+            builder.Services.AddSingleton<CircuitoRepositorio>();
 
             var app = builder.Build();
 
