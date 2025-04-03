@@ -52,7 +52,7 @@ namespace ControlAccesoApi.Controladores
             if (existente == null)
                 return NotFound();
 
-            // Actualizar solo los campos proporcionados en el DTO
+            // Actualizar solo los campos proporcionados en el DTO  
             if (permisosDto.UsuarioId != null)
                 existente.UsuarioId = permisosDto.UsuarioId;
             if (permisosDto.PuertasId != null)

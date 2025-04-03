@@ -17,8 +17,8 @@ namespace ControlAccesoApi.Modelos
     public class CircuitosDto
     {
         public string? PermisoId { get; set; }
-        public DateTime? Fecha { get; set; }
         public bool? Estado { get; set; }
+        public DateTime? Fecha { get; set; }
 
     }
 }
