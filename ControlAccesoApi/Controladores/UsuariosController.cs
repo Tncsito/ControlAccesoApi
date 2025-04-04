@@ -1,5 +1,6 @@
 ﻿using ControlAccesoApi.Modelos;
 using ControlAccesoApi.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace ControlAccesoApi.Controladores
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly UsuarioRepositorio _usuarioRepositorio;
