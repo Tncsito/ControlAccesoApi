@@ -362,3 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /ControlAccesoApi/Modelos/Circuitos.cs
+/.firebaserc
+/apphosting.yaml
+/firebase.json
