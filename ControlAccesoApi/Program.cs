@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using ControlAccesoApi.Servicios;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace ControlAccesoApi
 {
@@ -21,18 +22,8 @@ namespace ControlAccesoApi
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
             // Add services to the container.
-            builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowFrontend", policy =>
-                {
-                    policy.WithOrigins()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
-            });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
@@ -57,17 +48,48 @@ namespace ControlAccesoApi
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = "tu-dominio.com",
-                        ValidAudience = "tu-dominio.com",
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                     };
                 });
 
-            builder.Services.AddAuthorization();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mi API", Version = "v1" });
+
+                // Definir el esquema de seguridad para Swagger
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Ingrese el token en el formato: Bearer {token}"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+            });
+
+            builder.Services.AddControllers();
+
 
             // Register services as singletons
             builder.Services.AddSingleton<MongoDBService>(sp =>
@@ -100,34 +122,6 @@ namespace ControlAccesoApi
             app.MapControllers();
             app.Run();
 
-            // Genera el token JWT (esto normalmente se haría en el controlador de autenticación)
-            var token = await ObtenerTokenJwtAsync();
-
-            // Realiza una solicitud GET con el token JWT
-            await HacerSolicitudGetConTokenAsync(token);
-        }
-
-        private static async Task<string> ObtenerTokenJwtAsync()
-        {
-            using var client = new HttpClient();
-            var loginData = new { Username = "admin", Password = "1234" };
-            var response = await client.PostAsJsonAsync("https://localhost:44332/api/auth/login", loginData);
-            response.EnsureSuccessStatusCode();
-
-            var result = await response.Content.ReadAsAsync<dynamic>();
-            return result.token;
-        }
-
-        private static async Task HacerSolicitudGetConTokenAsync(string token)
-        {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await client.GetAsync("https://localhost:44332/api/Acceso/Get");
-            response.EnsureSuccessStatusCode();
-
-            var content = await response.Content.ReadAsStringAsync();
-            Console.WriteLine(content);
         }
     }
 }

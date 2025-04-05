@@ -1,4 +1,5 @@
 ﻿using ControlAccesoApi.Modelos;
+using ControlAccesoApi.Repositorios; // Asegúrate de tener el namespace correcto para tu repositorio
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,21 +13,23 @@ namespace ControlAccesoApi.Controladores
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly UsuarioRepositorio _usuarioRepositorio;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IConfiguration config, UsuarioRepositorio usuarioRepositorio)
         {
             _config = config;
+            _usuarioRepositorio = usuarioRepositorio;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            if (model.Username == "admin" && model.Password == "1234") // Reemplázalo con validación real
+            var user = await _usuarioRepositorio.ObtenerUsuarioPorCorreo(model.Correo);
+            if (user != null && model.Clave == user.Clave) // Reemplázalo con validación real
             {
-                var token = GenerateJwtToken(model.Username);
+                var token = GenerateJwtToken(model.Correo);
                 return Ok(new { token });
             }
-
             return Unauthorized();
         }
 
@@ -42,8 +45,6 @@ namespace ControlAccesoApi.Controladores
             var securityKey = new SymmetricSecurityKey(key);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                issuer: "tu-dominio.com",
-                audience: "tu-dominio.com",
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials

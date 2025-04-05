@@ -1,5 +1,8 @@
-﻿using ControlAccesoApi.Servicios;
+﻿using ControlAccesoApi.Modelos;
+using ControlAccesoApi.Servicios;
 using MongoDB.Driver;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ControlAccesoApi.Repositorios
 {
@@ -35,6 +38,11 @@ namespace ControlAccesoApi.Repositorios
         public async Task EliminarAsync(string id)
         {
             await _usuarios.DeleteOneAsync(usuario => usuario.Id == id);
+        }
+
+        public async Task<Usuario> ObtenerUsuarioPorCorreo(string correo)
+        {
+            return await _usuarios.Find<Usuario>(usuario => usuario.Correo == correo).FirstOrDefaultAsync();
         }
     }
 }
