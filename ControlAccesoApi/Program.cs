@@ -59,7 +59,10 @@ namespace ControlAccesoApi
 
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mi API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api de control de acceso", Version = "Tero",
+                    Description = "Un sistema de control de acceso moderno proporciona a " +
+                    "cualquier empresa las herramientas necesarias para determinar quién " +
+                    "tiene acceso a una zona determinada y en qué momento." });
 
                 // Definir el esquema de seguridad para Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -69,7 +72,7 @@ namespace ControlAccesoApi
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Ingrese el token en el formato: Bearer {token}"
+                    Description = "Ingrese el token en el formato: Bearer {token} (sin parentesis, sin comillas)"
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -112,7 +115,7 @@ namespace ControlAccesoApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors("AllowAllOrigins");
             app.UseHttpsRedirection();
 
             // Añade el middleware de autenticación y autorización

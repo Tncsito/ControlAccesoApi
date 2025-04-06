@@ -9,7 +9,7 @@ namespace ControlAccesoApi.Controladores
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CircuitoController : Controller
     {
         private readonly CircuitoRepositorio _circuitoRepositorio;
