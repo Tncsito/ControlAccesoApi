@@ -46,9 +46,9 @@ namespace ControlAccesoApi.Controladores
         }
 
         [HttpPut("Put/{id}")]
-        public async Task<IActionResult> Put(string id, [FromBody] CircuitosDto circuitosDto)
+        public async Task<IActionResult> Put( [FromBody] Circuitos circuitosDto)
         {
-            var existente = await _circuitoRepositorio.ObtenerPorIdAsync(id);
+            var existente = await _circuitoRepositorio.ObtenerPorIdAsync(circuitosDto.Id);
             if (existente == null)
                 return NotFound();
 
@@ -60,7 +60,7 @@ namespace ControlAccesoApi.Controladores
             if (circuitosDto.Fecha != null)
                 existente.Fecha = circuitosDto.Fecha;
 
-            await _circuitoRepositorio.ActualizarAsync(id, existente);
+            await _circuitoRepositorio.ActualizarAsync(circuitosDto.Id, existente);
             return NoContent();
         }
 
